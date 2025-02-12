@@ -6,8 +6,21 @@ import { registerError, registerSuccess, registerUser } from "./reducer"
 
 const fireBaseBackend = getFirebaseBackend()
 
+const generateReferralCode = (length: number): string => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+  
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters[randomIndex];
+  }
+  
+  return code;
+}
+
 function* registerUserAsync(action: ReturnType<typeof registerUser>) {
   try {
+    console.log(action.payload)
     if (!fireBaseBackend) {
       yield put(registerError("Something went wrong please try again later!"))
       return
@@ -15,6 +28,19 @@ function* registerUserAsync(action: ReturnType<typeof registerUser>) {
 
     const response: firebase.User = yield call(fireBaseBackend.registerUser, action.payload.username, action.payload.password, action.payload.type)
     if (!response) throw Error("Something went wrong please try again later or contact a developer")
+
+    if (action.payload.type === "GROUP") {
+      yield call(fireBaseBackend.addDocumentToCollection, {
+        route: "organizations",
+        data: {
+          name: action.payload.orgName,
+          email: action.payload.orgEmail,
+          owner: response.uid,
+          code: generateReferralCode(8),
+          users: []
+        }
+      })
+    }
 
     fireBaseBackend.setLoggedInUser(response)
     action.payload.navigate("/")

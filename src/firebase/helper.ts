@@ -64,7 +64,7 @@ class FirebaseAuthBackend {
     const user = userCredential.user
 
     await this.addDocumentToCollection({
-      route: "user",
+      route: "users",
       data: {
         email,
         uuid: user.uid,

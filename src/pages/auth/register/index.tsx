@@ -48,6 +48,8 @@ const Register: React.FC = () => {
 
   const handleRegister = (val: FormType) => {
     const payload: RegisterType = {
+      orgName: val.orgName,
+      orgEmail: val.orgEmail,
       username: val.username,
       password: val.password,
       type: val.isGroup ? "GROUP" : "USER",

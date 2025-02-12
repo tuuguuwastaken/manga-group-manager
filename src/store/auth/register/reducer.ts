@@ -13,6 +13,8 @@ export interface RegisterType {
   username: string
   password: string
   type: "GROUP" | "USER"
+  orgName?: string | null
+  orgEmail?: string | null
   navigate: NavigateFunction
 }
 
