@@ -1,21 +1,21 @@
 import { FirebaseError } from "firebase/app"
 import { put, call, takeEvery, all } from "redux-saga/effects"
-import firebase from "firebase/compat/app"
 import { getFirebaseBackend } from "../../../firebase/helper"
 import { registerError, registerSuccess, registerUser } from "./reducer"
+import firebase from "firebase/compat/app"
 
 const fireBaseBackend = getFirebaseBackend()
 
 const generateReferralCode = (length: number): string => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let code = '';
-  
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  let code = ""
+
   for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    code += characters[randomIndex];
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    code += characters[randomIndex]
   }
-  
-  return code;
+
+  return code
 }
 
 function* registerUserAsync(action: ReturnType<typeof registerUser>) {
@@ -30,16 +30,23 @@ function* registerUserAsync(action: ReturnType<typeof registerUser>) {
     if (!response) throw Error("Something went wrong please try again later or contact a developer")
 
     if (action.payload.type === "GROUP") {
-      yield call(fireBaseBackend.addDocumentToCollection, {
+      const data:string = yield call(fireBaseBackend.addDocumentToCollection, {
         route: "organizations",
         data: {
           name: action.payload.orgName,
           email: action.payload.orgEmail,
           owner: response.uid,
+          rootAdminId: response.uid,
           code: generateReferralCode(8),
-          users: []
-        }
+        },
       })
+
+      const res:string = yield call(fireBaseBackend.updateDataByPath, {
+        route: `users/${response.uid}`,
+        type: "document",
+        data: { organizationId: data },
+      })
+      console.log(res)
     }
 
     fireBaseBackend.setLoggedInUser(response)

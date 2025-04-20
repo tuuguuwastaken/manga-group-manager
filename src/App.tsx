@@ -17,6 +17,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_APPID,
   measurementId: import.meta.env.VITE_APP_MEASUREMENTID,
 }
+
 initFirebaseBackend(firebaseConfig)
 
 if ("serviceWorker" in navigator) {
@@ -44,11 +45,11 @@ const App = () => {
       <ConfigProvider
         theme={{ token: { colorPrimary: "#389E0D" } }}
         locale={{
-          locale: "mn",
+          locale: "en",
           DatePicker: DatePickerLocale,
           TimePicker: TimePickerLocale,
           Empty: {
-            description: "Мэдээлэл хоосон байна",
+            description: "The list is empty",
           },
         }}
       >

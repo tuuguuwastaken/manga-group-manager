@@ -16,7 +16,7 @@ function* request() {
     const userId = firebaseBackend.currentUser().uid
 
     const res: CustomDocumentType<UserType> = yield call(firebaseBackend.getDataByPath, {
-      route: `users/${userId}`,
+      route: `users/${userId}`, 
       type: "document",
     })
 

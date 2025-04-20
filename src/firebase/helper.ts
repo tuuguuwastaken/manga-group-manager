@@ -12,8 +12,6 @@ import { DocumentData } from "@firebase/firestore"
 import { ImageType } from "../types/image"
 import Resizer from "react-image-file-resizer"
 import { CustomDocumentType, FirebaseAddDocumentType, FirebaseRequestType } from "../types/firebase"
-import { auth } from "./config"
-import { createUserWithEmailAndPassword } from "firebase/auth"
 
 class FirebaseAuthBackend {
   constructor(firebaseConfig: Object) {
@@ -60,17 +58,19 @@ class FirebaseAuthBackend {
   registerUser = async (email: string, password: string, type: "GROUP" | "USER") => {
     if (!email.includes("@")) email += "@soclite.com"
 
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password)
     const user = userCredential.user
 
-    await this.addDocumentToCollection({
-      route: "users",
-      data: {
-        email,
-        uuid: user.uid,
-        type,
-      },
+    await firebase.firestore().collection("users").doc(user?.uid).set({
+      updatedAt: firebase.firestore.Timestamp.now(),
+      updatedBy: this.currentUser().uid,
+      createdAt: firebase.firestore.Timestamp.now(),
+      createdBy: this.currentUser().uid,
+      email,
+      uuid: user?.uid,
+      type,
     })
+
     return user
   }
 

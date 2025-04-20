@@ -4,6 +4,9 @@ import Dashboard from "../pages/Dashboard"
 import Login from "../pages/auth/login"
 import Register from "../pages/auth/register"
 import Logout from "../pages/auth/logout"
+import WorkerListPage from "../pages/employee/workers"
+import SupervisorListPage from "../pages/employee/supervisors"
+import WorkerCreatePage from "../pages/employee/workers/edit"
 
 interface RouterType {
   path: string
@@ -24,15 +27,35 @@ const routes: RouterType[] = [
     authProtected: false,
   },
   {
-    path:"/logout",
+    path: "/logout",
     component: <Logout />,
-    authProtected: false
+    authProtected: false,
   },
   {
-    path:"/register",
+    path: "/register",
     component: <Register />,
     authProtected: false,
-  }
+  },
+  {
+    path: "/workers",
+    component: <WorkerListPage />,
+    authProtected: true,
+  },
+  {
+    path: "/workers/add",
+    component: <WorkerCreatePage/>,
+    authProtected: true,
+  },
+  {
+    path:"/workers/:id/edit",
+    component: <WorkerCreatePage />,
+    authProtected: true,
+  },
+  {
+    path: "/supervisors",
+    component: <SupervisorListPage />,
+    authProtected: true,
+  },
 ]
 
 export default routes
