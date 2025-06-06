@@ -11,6 +11,12 @@ import workerUpdateOneSaga from "./Employee/Worker/updateOne/saga"
 import supervisorEditOneSaga from "./Employee/Supervisor/editOne/saga"
 import supervisorGetOneSaga from "./Employee/Supervisor/getOne/saga"
 import supervisorGetListSaga from "./Employee/Supervisor/getList/saga"
+import palletWeightGetListSaga from "./pallets/getList/saga"
+import palletWeightEditOneSaga from "./pallets/editOne/saga"
+import palletWeightGetOneSaga from "./pallets/getOne/saga"
+import contractorGetListSaga from "./contractor/GetList/saga"
+import contractorEditOneSaga from "./contractor/EditOne/saga"
+import contractorGetOneSaga from "./contractor/GetOne/saga"
 
 export default function* rootSaga() {
   yield all([
@@ -24,6 +30,12 @@ export default function* rootSaga() {
     fork(workerUpdateOneSaga),
     fork(supervisorEditOneSaga),
     fork(supervisorGetOneSaga),
-    fork(supervisorGetListSaga)
+    fork(supervisorGetListSaga),
+    fork(palletWeightGetListSaga),
+    fork(palletWeightEditOneSaga),
+    fork(palletWeightGetOneSaga),
+    fork(contractorGetListSaga),
+    fork(contractorEditOneSaga),
+    fork(contractorGetOneSaga),
   ])
 }

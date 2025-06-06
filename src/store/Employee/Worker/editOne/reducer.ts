@@ -1,9 +1,10 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
 import { CustomDocumentType } from "../../../../types/firebase"
 import { RootState } from "../../../states"
-import { ConfigType } from "../../../../types/config"
 import { ImageState } from "../../../../types/image"
 import { WorkerType } from "../../../../types/employee/worker"
+import { ConfigState } from "../../../../hooks/group"
+import { NavigateFunction } from "react-router-dom"
 
 export interface WorkerEditOneState {
     error?: string | null
@@ -18,7 +19,7 @@ const initialState: WorkerEditOneState = {
 export const selectWorkerEditOneState = (state: RootState): WorkerEditOneState => state.workerEditOne
 
 export const workerEditOneInitial = createAction("WORKER_CREATE_ONE_INITIAL")
-export const workerEditOneRequest = createAction<{data:WorkerType,config: ConfigType, id?: string, image?: ImageState | null}>("WORKER_CREATE_ONE_REQUEST")
+export const workerEditOneRequest = createAction<{data:WorkerType,config: ConfigState, id?: string, image?: ImageState | null, navigate: NavigateFunction}>("WORKER_CREATE_ONE_REQUEST")
 export const workerEditOneSuccess = createAction("WORKER_CREATE_ONE_SUCCES")
 export const workerEditOneError = createAction<string>("WORKER_CREATE_ONE_ERROR")
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Card, Col, Form, Input, Row } from "antd"
 import AppBarComponent from "../../../../components/Appbar"
 import { useEffect, useMemo, useState } from "react"
@@ -23,11 +24,7 @@ const WorkerCreatePage = () => {
   const isEdit = useMemo(() => !isNil(id), [id])
 
   useEffect(() => {
-    console.log(id)
-    console.log(isEdit)
-  }, [id])
-
-  useEffect(() => {
+    console.log("Called")
     if (isEdit && id && config.path) {
       dispatch(
         workerGetOneRequest({
@@ -57,7 +54,8 @@ const WorkerCreatePage = () => {
       ...val,
       profilePicture: data?.data.profilePicture ?? null,
     }
-    dispatch(workerEditOneRequest({ config, data: payload, id: id, image: profile ?? null }))
+    dispatch(workerEditOneRequest({ config, data: payload, id: id, image: profile ?? null, navigate: navigate }))
+    dispatch(formEditFinished())
   }
 
   return (
@@ -114,7 +112,7 @@ const WorkerCreatePage = () => {
             <Col>
               <Row gutter={20} justify={"center"}>
                 <Col span={11}>
-                  <Button type="primary" htmlType="submit" className="mr-4">
+                  <Button type="primary" htmlType="submit" className="mr-4" loading={loading}>
                     Submit
                   </Button>
                 </Col>

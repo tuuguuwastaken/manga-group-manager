@@ -1,27 +1,46 @@
-import { HomeOutlined, BookOutlined, AuditOutlined, TeamOutlined, FieldTimeOutlined } from "@ant-design/icons"
+import {
+  HomeOutlined,
+  BookOutlined,
+  AuditOutlined,
+  TeamOutlined,
+  FieldTimeOutlined,
+  BankOutlined
+} from "@ant-design/icons"
 import { MenuProps } from "antd"
 
-type MenuItem = NonNullable<Required<MenuProps>["items"]>[number]
+export type MenuItem = NonNullable<Required<MenuProps>["items"]>[number]
 
-function menuItem(
+function createMenuItem(
   label: React.ReactNode,
-  key: string | null,
+  key: string,
   icon?: React.ReactNode,
   children?: MenuItem[]
 ): MenuItem {
+  if (children && children.length > 0) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    }
+  }
+
   return {
     key,
     icon,
-    children: children?.filter(Boolean),
     label,
   }
 }
 
 export const menuItems: MenuItem[] = [
-  menuItem("Dashboard", "/", <HomeOutlined />),
-  menuItem("Schedule", "/schedule", <FieldTimeOutlined />),
-  menuItem("Employees", "", <BookOutlined />, [
-    menuItem("Workers", "/workers", <TeamOutlined /> ),
-    menuItem("Supervisors", "/supervisors",<AuditOutlined />),
+  createMenuItem("Dashboard", "/", <HomeOutlined />),
+  createMenuItem("Schedule", "/schedule", <FieldTimeOutlined />),
+  createMenuItem("Employees", "employees", <BookOutlined />, [
+    createMenuItem("Workers", "/workers", <TeamOutlined />),
+    createMenuItem("Supervisors", "/supervisors", <AuditOutlined />),
   ]),
+  createMenuItem("Workplace", "/workplace", <BankOutlined />, [
+    createMenuItem("Companies", "/workplace/companies", <BookOutlined />)
+  ]),
+  createMenuItem("Weight", "/pallets", <FieldTimeOutlined />)
 ]

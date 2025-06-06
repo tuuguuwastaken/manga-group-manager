@@ -1,10 +1,13 @@
-import { Layout, Menu, MenuProps } from "antd"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Layout, Menu } from "antd"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useCurrentGroup } from "../../hooks/group"
 import { useDispatch, useSelector } from "react-redux"
 import { organizationOneRequest, selectOrganizationOneState } from "../../store/organization/GetOne/reducer"
-import { menuItems as menu } from "./menu"
+import { menuItems } from "./menu"
+import { selectLoginState } from "../../store/auth/login/reducer"
+import { profileRequest, selectProfileState } from "../../store/profile/reducer"
+import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons"
 
 const { Header, Sider, Content } = Layout
 
@@ -13,76 +16,85 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { data } = useSelector(selectOrganizationOneState)
-  const { config } = useCurrentGroup()
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
+  const { data: profileData } = useSelector(selectProfileState)
+  const loginState = useSelector(selectLoginState)
   const [collapsed, setCollapsed] = useState(false)
 
   useEffect(() => {
-    if (config?.orgId) {
-      dispatch(organizationOneRequest({ id: config.orgId }))
-    }
-  }, [config?.orgId, dispatch])
-
-  const menuItems: MenuItem[] = menu
+    if (loginState.user) dispatch(profileRequest())
+  }, [loginState.user])
 
   useEffect(() => {
+    console.log("GETTING CONFIG")
+    const orgId = profileData?.data.organizationId
+    console.log(orgId)
+    if (orgId) dispatch(organizationOneRequest({ id: orgId }))
+  }, [profileData])
+
+  // Automatically select menu items based on path
+  const selectedKeys = useMemo(() => {
     const keys: string[] = []
 
     menuItems.forEach((item) => {
       if (!item?.key) return
 
-      const itemKey = String(item.key)
-      if (location.pathname.startsWith(itemKey)) {
-        keys.push(itemKey)
+      if (location.pathname.includes(item.key.toString())) {
+        keys.push(item.key.toString())
       }
 
-      if (Array.isArray(item?.children) && item.children.length > 0) {
+      if ("children" in item && Array.isArray(item.children)) {
         item.children.forEach((child) => {
-          if (!child?.key) return
-
-          const childKey = String(child.key)
-          if (location.pathname.startsWith(childKey)) {
-            keys.push(childKey)
+          if (child?.key && location.pathname.includes(child.key.toString())) {
+            keys.push(child.key.toString())
           }
         })
       }
     })
 
-    setSelectedKeys(keys)
-  }, [location.pathname, menuItems])
-
-  const menuRender = useMemo(() => {
-    return (
-      <Menu
-        theme="dark"
-        selectedKeys={selectedKeys}
-        defaultOpenKeys={[`/${location.pathname.split("/")[1]}`]}
-        mode="inline"
-        items={menuItems}
-        onSelect={(e) => navigate(e.key)}
-      />
-    )
-  }, [])
+    return keys
+  }, [location.pathname])
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* Sidebar */}
-      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
-        <div className="logo" style={{ color: "white", textAlign: "center", padding: "16px", fontSize: "18px" }}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        trigger={null}
+        breakpoint="md"
+        onBreakpoint={(broken) => setCollapsed(broken)}
+      >
+        <div
+          className="logo"
+          style={{
+            color: "white",
+            textAlign: "center",
+            padding: "16px",
+            fontSize: "18px",
+          }}
+        >
           {`WMS 0.0.1`}
         </div>
-        {menuRender}
+
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={selectedKeys}
+          defaultOpenKeys={[`/${location.pathname.split("/")[1]}`]}
+          items={menuItems}
+          onSelect={({ key }) => navigate(key)}
+        />
       </Sider>
 
-      {/* Main Content Area */}
       <Layout>
-        <Header style={{ background: "#fff", padding: "0 20px", fontSize: "18px" }}>{data?.data.name}</Header>
-        <Content style={{ margin: " 0px 20px", padding:"10px", borderRadius: "8px" }}>{children}</Content>
+        <Header style={{ background: "#fff", padding: "0 20px", fontSize: "18px" }}>
+          <Button type="text" icon={collapsed ? <DoubleRightOutlined /> : <DoubleLeftOutlined />} onClick={() => setCollapsed(!collapsed)} />
+          {data?.data.name}
+        </Header>
+        <Content style={{ margin: "0 20px", padding: "10px", borderRadius: "8px" }}>{children}</Content>
       </Layout>
     </Layout>
   )
 }
 
 export default AppLayout
-
-type MenuItem = NonNullable<Required<MenuProps>["items"]>[number]

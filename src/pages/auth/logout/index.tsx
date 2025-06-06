@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -9,8 +10,8 @@ const Logout = () => {
 
   useEffect(() => {
     dispatch(logoutUser(navigate))
-    // localStorage.removeItem("current_property_id")
-  }, [dispatch])
+    localStorage.removeItem("current_property_id")
+  }, [])
 
   return <></>
 }

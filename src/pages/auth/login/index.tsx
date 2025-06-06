@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Button, Input, Form, Alert, Row, Col, Checkbox, Card } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import { loginUser, selectLoginState } from "../../../store/auth/login/reducer"
@@ -32,7 +32,7 @@ const Wrapper = styled.div`
 const Login: React.FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { user, loading, error } = useSelector(selectLoginState)
+  const { loading, error } = useSelector(selectLoginState)
   interface FormType {
     username: string
     password: string
@@ -46,11 +46,6 @@ const Login: React.FC = () => {
     remember: false,
   })
 
-  useEffect(() => {
-    if (user) {
-      navigate("/", { replace: true })
-    }
-  }, [user])
   const handleLogin = (val: LoginType) => {
     console.log(val)
     const payload: LoginType = {

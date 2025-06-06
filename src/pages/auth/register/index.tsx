@@ -1,9 +1,10 @@
 import React, { useState } from "react"
-import { Button, Input, Form, Alert, Row, Col, Checkbox, Card, CheckboxChangeEvent } from "antd"
+import { Button, Input, Form, Alert, Row, Col, Checkbox, Card } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { RegisterType, registerUser, selectRegisterState } from "../../../store/auth/register/reducer"
+import { CheckboxChangeEvent } from "antd/es/checkbox"
 
 const Wrapper = styled.div`
   width: 100%;

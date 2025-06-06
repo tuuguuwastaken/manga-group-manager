@@ -10,6 +10,13 @@ import workerUpdateOneReducer from "./Employee/Worker/updateOne/reducer"
 import supervisorEditOneReducer from "./Employee/Supervisor/editOne/reducer"
 import supervisorGetOneReducer from "./Employee/Supervisor/getOne/reducer"
 import supervisorGetListReducer from "./Employee/Supervisor/getList/reducer"
+import formEditReducer from "./formState/reducer"
+import palletWeightGetListReducer from "./pallets/getList/reducer"
+import palletWeightEditOneReducer from "./pallets/editOne/reducer"
+import palletWeightGetOneReducer from "./pallets/getOne/reducer"
+import contractorGetListReducer from "./contractor/GetList/reducer"
+import contractorEditOneReducer from "./contractor/EditOne/reducer"
+import contractorGetOneReducer from "./contractor/GetOne/reducer"
 
 const rootReducer = combineReducers({
     authLogin: loginReducer,
@@ -23,6 +30,13 @@ const rootReducer = combineReducers({
     supervisorEditOne: supervisorEditOneReducer,
     supervisorGetOne: supervisorGetOneReducer,
     supervisorGetList: supervisorGetListReducer,
+    formEdit: formEditReducer,
+    palletWeightGetList: palletWeightGetListReducer,
+    palletWeightEditOne: palletWeightEditOneReducer,
+    palletWeightGetOne: palletWeightGetOneReducer,
+    contractorGetList: contractorGetListReducer,
+    contractorEditOne: contractorEditOneReducer,
+    contractorGetOne: contractorGetOneReducer,
 })
 
 export default rootReducer

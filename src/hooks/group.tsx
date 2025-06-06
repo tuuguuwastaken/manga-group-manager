@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from "react"
-import { profileRequest, selectProfileState } from "../store/profile/reducer"
-import { useDispatch, useSelector } from "react-redux"
 import { isNil } from "lodash"
+import { useMemo } from "react"
+import { useSelector } from "react-redux"
+import { selectProfileState } from "../store/profile/reducer"
 
 export interface ConfigState {
   curPropId?: string | null
@@ -10,12 +10,7 @@ export interface ConfigState {
 }
 
 export const useCurrentGroup = () => {
-  const dispatch = useDispatch()
   const { data: profileData } = useSelector(selectProfileState)
-
-  useEffect(() => {
-    dispatch(profileRequest())
-  }, [dispatch])
 
   const config = useMemo((): ConfigState => {
     const orgId = profileData?.data.organizationId
@@ -23,6 +18,7 @@ export const useCurrentGroup = () => {
 
     if (!isNil(orgId)) {
       path = `organizations/${orgId}`
+      localStorage.setItem("org_id", orgId)
     }
 
     return {

@@ -45,7 +45,7 @@ function* request(action: ReturnType<typeof supervisorEditOneRequest>) {
         console.log(ex)
       }
     }
-
+    action.payload.navigate(-1)
     yield put(supervisorEditOneSuccess())
   } catch (error) {
     console.log(error)

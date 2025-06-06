@@ -17,7 +17,6 @@ function* request(action: ReturnType<typeof supervisorGetOneRequest>) {
         route: `${action.payload.config.path}/supervisors/${action.payload.id}`,
         type:"document"
     })
-    console.log("USER DATA : ", res)
 
     yield put(supervisorGetOneSuccess(res))
   } catch (error) {

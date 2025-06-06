@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import { v4 as uuidv4 } from "uuid"
 import { FirebaseError } from "firebase/app"
 import firebase from "firebase/compat/app"
@@ -12,9 +11,10 @@ import { DocumentData } from "@firebase/firestore"
 import { ImageType } from "../types/image"
 import Resizer from "react-image-file-resizer"
 import { CustomDocumentType, FirebaseAddDocumentType, FirebaseRequestType } from "../types/firebase"
+import { AnyObject } from "antd/es/_util/type"
 
 class FirebaseAuthBackend {
-  constructor(firebaseConfig: Object) {
+  constructor(firebaseConfig: AnyObject) {
     firebase.initializeApp(firebaseConfig)
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -371,7 +371,7 @@ let _fireBaseBackend: FirebaseAuthBackend | null = null
  * Initilize the backend
  * @param {*} config
  */
-const initFirebaseBackend = (config: Object) => {
+const initFirebaseBackend = (config: AnyObject) => {
   if (!_fireBaseBackend) {
     _fireBaseBackend = new FirebaseAuthBackend(config)
   }

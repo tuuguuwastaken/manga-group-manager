@@ -1,8 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
 import { CustomDocumentType } from "../../../../types/firebase"
 import { RootState } from "../../../states"
-import { ConfigType } from "../../../../types/config"
 import { SupervisorType } from "../../../../types/employee/supervidor"
+import { ConfigState } from "../../../../hooks/group"
 
 export interface SupervisorGetListState {
     error?: string | null
@@ -16,10 +16,10 @@ const initialState: SupervisorGetListState = {
 
 export const selectSupervisorGetListState = (state: RootState): SupervisorGetListState => state.supervisorGetList
 
-export const supervisorGetListInitial = createAction("WORKER_GET_LIST_INITIAL")
-export const supervisorGetListRequest = createAction<{config: ConfigType}>("WORKER_GET_LIST_REQUEST")
-export const supervisorGetListSuccess = createAction<CustomDocumentType<SupervisorType>[]>("WORKER_GET_LIST_SUCCES")
-export const supervisorGetListError = createAction<string>("WORKER_GET_LIST_ERROR")
+export const supervisorGetListInitial = createAction("SUPERVISOR_GET_LIST_INITIAL")
+export const supervisorGetListRequest = createAction<{config: ConfigState}>("SUPERVISOR_GET_LIST_REQUEST")
+export const supervisorGetListSuccess = createAction<CustomDocumentType<SupervisorType>[]>("SUPERVISOR_GET_LIST_SUCCES")
+export const supervisorGetListError = createAction<string>("SUPERVISOR_GET_LIST_ERROR")
 
 const supervisorGetListReducer = createReducer(initialState,  (builder) => {
     builder.addCase(supervisorGetListInitial, (state) => {

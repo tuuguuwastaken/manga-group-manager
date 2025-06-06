@@ -15,8 +15,11 @@ function* loginUserAsync(action: ReturnType<typeof loginUser>) {
     const response: firebase.User | null = yield call(fireBaseBackend.loginUser, action.payload.username, action.payload.password)
     if (!response) throw Error("Username/password is incorrect.")
 
+
+    localStorage.setItem("current_org","asda")
+
     fireBaseBackend.setLoggedInUser(response)
-    // action.payload.navigate("/")
+    action.payload.navigate("/")
 
     yield put(loginSuccess(response))
   } catch (error) {

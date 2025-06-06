@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useDispatch, useSelector } from "react-redux"
 import { useCurrentGroup } from "../../../hooks/group"
 import { selectWorkerGetListState, workerGetListRequest } from "../../../store/Employee/Worker/getList/reducer"
@@ -16,93 +15,116 @@ const WorkerListPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  // const [form] = useForm()
+  const [form] = useForm()
   const { config } = useCurrentGroup()
   const { data, loading } = useSelector(selectWorkerGetListState)
 
-  // const [searchParams, setSearchParams] = useState<FilterType | null>(null)
+  const [searchParams, setSearchParams] = useState<FilterType | null>(null)
 
   useEffect(() => {
-    console.log("CONFIG AND DATA : ", config,data)
+    console.log("CONFIG AND DATA : ", config, data)
     if (config && !data) {
       console.log("sending res")
       dispatch(workerGetListRequest({ config }))
     }
   }, [config])
 
-  const columns: TableColumnsType<CustomDocumentType<WorkerType>> = useMemo(() => [
-    {
-      title: "№",
-      align: "center",
-      width: 10,
-      render: (_value, _record, index) => <p>{index + 1}</p>,
-    },
-    {
-      title: "First Name",
-      align: "start",
-      width: 150,
-      render: (_value, record) => <>{record.data.firstName}</>,
-    },
-    {
-      title: "Last name",
-      align: "start",
-      width: 150,
-      render: (_value, record) => <>{record.data.lastName}</>,
-    },
-    {
-      title: "Email",
-      align: "start",
-      render: (_value, record) => <>{record.data.email}</>,
-    },
-    {
-      title: "Phone number",
-      align: "start",
-      render: (_value, record) => <>{record.data.phoneNumber}</>,
-    },
-    {
-      title: "Actions",
-      align: "center",
-      render: (_value, record) => (
-        <Button onClick={() => navigate(`/workers/${record.id}/edit`)}>edit</Button>
-      ),
-    },
-  ], [navigate])
+  const filteredData = useMemo(() => {
+    if (!searchParams || !data) return data || []
 
-  // const newWorker = () => {
-  //   navigate("add")
-  // }
+    return data.filter((worker) => {
+      const { firstName, lastName, email, phoneNumber } = worker.data
 
-  // const debouncedSetSearchParams = useMemo(
-  //   () => debounce((values) => {
-  //     setSearchParams((prev) => {
-  //       if (JSON.stringify(prev) !== JSON.stringify(values)) {
-  //         return values
-  //       }
-  //       return prev
-  //     })
-  //   }, 800),
-  //   []
-  // )
+      const matchesName =
+        !searchParams.singleSearch ||
+        `${firstName} ${lastName}`.toLowerCase().includes(searchParams.singleSearch.toLowerCase()) ||
+        `${lastName} ${firstName}`.toLowerCase().includes(searchParams.singleSearch.toLowerCase())
 
-  // const handleFormChange = (e: FilterType) => {
-  //   debouncedSetSearchParams(e)
-  // }
+      const matchesEmail = !searchParams.email || email?.toLowerCase().includes(searchParams.email.toLowerCase())
 
-  // const handleSearchClear = () => {
-  //   form.resetFields()
-  //   setSearchParams(null)
-  // }
+      const matchesPhone = !searchParams.phoneNumber || phoneNumber?.includes(searchParams.phoneNumber)
+
+      return matchesName && matchesEmail && matchesPhone
+    })
+  }, [searchParams, data])
+
+  const columns: TableColumnsType<CustomDocumentType<WorkerType>> = useMemo(
+    () => [
+      {
+        title: "№",
+        align: "center",
+        width: 10,
+        render: (_value, _record, index) => <p>{index + 1}</p>,
+      },
+      {
+        title: "First Name",
+        align: "start",
+        width: 150,
+        render: (_value, record) => <>{record.data.firstName}</>,
+      },
+      {
+        title: "Last name",
+        align: "start",
+        width: 150,
+        render: (_value, record) => <>{record.data.lastName}</>,
+      },
+      {
+        title: "Email",
+        align: "start",
+        render: (_value, record) => <>{record.data.email}</>,
+      },
+      {
+        title: "Phone number",
+        align: "start",
+        render: (_value, record) => <>{record.data.phoneNumber}</>,
+      },
+      {
+        title: "Actions",
+        align: "center",
+        render: (_value, record) => <Button onClick={() => navigate(`/workers/${record.id}/edit`)}>edit</Button>,
+      },
+    ],
+    [navigate]
+  )
+
+  const newWorker = () => {
+    navigate("add")
+  }
+
+  const debouncedSetSearchParams = useMemo(
+    () =>
+      debounce((values) => {
+        setSearchParams((prev) => {
+          if (JSON.stringify(prev) !== JSON.stringify(values)) {
+            return values
+          }
+          return prev
+        })
+      }, 800),
+    []
+  )
+
+  const handleFormChange = (e: FilterType) => {
+    debouncedSetSearchParams(e)
+  }
+
+  const handleSearchClear = () => {
+    form.resetFields()
+    setSearchParams(null)
+  }
 
   return (
     <>
-      <h2>Worker List</h2>
+      <div style={{display:"flex", justifyContent:"space-between"}}>
+        <h2>Worker List</h2>
+        <Col style={{display: "flex", alignItems:"center"}}>
+          <Button type="primary" onClick={newWorker}>
+            Add
+          </Button>
+        </Col>
+      </div>
       <Card>
         <Row gutter={[0, 10]} justify={"start"}>
-          {/* <Col>
-            <Button type="primary" onClick={newWorker}>
-              Add
-            </Button>
-          </Col>
           <Col span={24}>
             <Form layout="vertical" form={form} onValuesChange={handleFormChange}>
               <Row gutter={[10, 10]}>
@@ -131,10 +153,10 @@ const WorkerListPage = () => {
                   </Col>
                 )}
               </Row>
-            </Form> */}
-          {/* </Col> */}
+            </Form>
+          </Col>
           <Col span={24}>
-            <Table loading={loading} columns={columns} dataSource={data || []} size="small" />
+            <Table loading={loading} columns={columns} dataSource={filteredData} size="small" />
           </Col>
         </Row>
       </Card>

@@ -1,8 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
 import { CustomDocumentType } from "../../../../types/firebase"
 import { RootState } from "../../../states"
-import { ConfigType } from "../../../../types/config"
 import { WorkerType } from "../../../../types/employee/worker"
+import { ConfigState } from "../../../../hooks/group"
 
 export interface WorkerGetOneState {
     error?: string | null
@@ -17,7 +17,7 @@ const initialState: WorkerGetOneState = {
 export const selectWorkerGetOneState = (state: RootState): WorkerGetOneState => state.workerGetOne
 
 export const workerGetOneInitial = createAction("WORKER_GET_ONE_INITIAL")
-export const workerGetOneRequest = createAction<{config: ConfigType,id:string, onSuccess: (val: CustomDocumentType<WorkerType>) => void}>("WORKER_GET_ONE_REQUEST")
+export const workerGetOneRequest = createAction<{config: ConfigState,id:string, onSuccess: (val: CustomDocumentType<WorkerType>) => void}>("WORKER_GET_ONE_REQUEST")
 export const workerGetOneSuccess = createAction<CustomDocumentType<WorkerType>>("WORKER_GET_ONE_SUCCES")
 export const workerGetOneError = createAction<string>("WORKER_GET_ONE_ERROR")
 

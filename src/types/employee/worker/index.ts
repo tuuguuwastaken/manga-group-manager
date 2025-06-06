@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { ImageType } from "../../image";
+import { WorkplaceWorkerType } from "../../workplace";
 
 export interface WorkerType {
     createAt?: Timestamp | null,
@@ -12,5 +13,5 @@ export interface WorkerType {
     email?: string | null,
     phoneNumber?: string | null,
     profilePicture?: ImageType | null
-    
+    workplace?: WorkplaceWorkerType[]
 }
