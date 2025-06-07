@@ -17,7 +17,7 @@ const initialState: PalletWeightEditOneState = {
 
 export const selectPalletWeightEditOneState = (state: RootState) => state.palletWeightEditOne
 
-export const palletWeightEditOneRequest = createAction<{ config: ConfigState; data: PalletWeightType, id?:string, navigate: NavigateFunction }>("PALLET_WEIGHT_EDIT_ONE_REQUEST")
+export const palletWeightEditOneRequest = createAction<{ config: ConfigState; data: PalletWeightType, id?:string, navigate?: NavigateFunction }>("PALLET_WEIGHT_EDIT_ONE_REQUEST")
 export const palletWeightEditOneSuccess = createAction("PALLET_WEIGHT_EDIT_ONE_SUCCESS")
 export const palletWeightEditOneError = createAction<string>("PALLET_WEIGHT_EDIT_ONE_ERROR")
 

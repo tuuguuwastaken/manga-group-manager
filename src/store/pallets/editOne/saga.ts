@@ -31,7 +31,9 @@ function* request(action: ReturnType<typeof palletWeightEditOneRequest>) {
       })
     }
 
-    action.payload.navigate(-1)
+    console.log(docId)
+
+    if (action.payload.navigate) action.payload.navigate(-1)
 
     yield put(palletWeightEditOneSuccess())
   } catch (e) {

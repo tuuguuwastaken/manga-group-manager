@@ -1,8 +1,11 @@
-import { Button, Col, Empty, Modal, Row } from "antd"
+import { Button, Col, Form, Input, Modal, Row } from "antd"
 import { useSelector } from "react-redux"
-import { selectContractorGetListState } from "../../../store/contractor/GetList/reducer"
-import { useMemo } from "react"
 import { PlusOutlined } from "@ant-design/icons"
+import { useForm } from "antd/es/form/Form"
+import { ContractorType } from "../../../types/contractor"
+import { useDispatch } from "react-redux"
+import { useCurrentGroup } from "../../../hooks/group"
+import { contractorEditOneRequest, selectContractorEditOneState } from "../../../store/contractor/EditOne/reducer"
 
 export interface ContractorComponentProp {
   show: boolean
@@ -15,83 +18,64 @@ interface ListType {
   label: string
 }
 
-const ContractorSelectComponent: React.FC<ContractorComponentProp> = ({ show, onHide, onSelect }) => {
-  const { data, loading } = useSelector(selectContractorGetListState)
+const ContractorSelectComponent: React.FC<ContractorComponentProp> = ({ show, onHide }) => {
+  const { loading } = useSelector(selectContractorEditOneState)
 
-  const list: ListType[] = useMemo(() => {
-    const arr: ListType[] = []
-    // if (!data) return []
-    data?.forEach((e) => {
-      arr.push({
-        value: e.id,
-        label: e.data.name,
-      })
-    })
-    arr.push({
-      value: "hendry",
-      label: "henry",
-    })
-    arr.push({
-      value: "hendry1",
-      label: "henry",
-    })
-    arr.push({
-      value: "hendry2",
-      label: "henry",
-    })
-    arr.push({
-      value: "hendry3",
-      label: "henry",
-    })  
-    return arr
-  }, [data])
+  const dispatch = useDispatch()
+  const { config } = useCurrentGroup()
+  const [form] = useForm()
 
   const onClose = () => {
-    // form.resetFields()
+    form.resetFields()
+    onHide()
+  }
+
+  const onSubmit = (val: ContractorType) => {
+    const payload = {
+      ...val,
+    }
+
+    dispatch(contractorEditOneRequest({ config, data: payload }))
+
     onHide()
   }
   return (
-    <Modal loading={loading} footer={null} title="Select contractor" centered open={show} onOk={onClose} onCancel={onClose}>
-      <Row gutter={[20, 10]} align={"middle"} justify={"center"}>
-        <Col span={24}>
-          {list.length > 0 ? (
-            <Row gutter={[12, 12]}>
-              {list.map((item) => (
-                <Col key={item.value} xs={24} sm={12} md={8} lg={6} xl={4}>
-                  <div
-                    onClick={() => onSelect(item)}
-                    style={{
-                      border: "1px solid #d9d9d9",
-                      padding: "12px",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      background: "#fafafa",
-                      transition: "0.3s",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#e6f7ff")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#fafafa")}
-                  >
-                    {item.label}
-                  </div>
-                </Col>
-              ))}
+    <Modal loading={loading} footer={null} title="Add a new Contractor" centered open={show} onOk={onClose} onCancel={onClose}>
+      <Form form={form} layout="vertical" scrollToFirstError onFinish={onSubmit}>
+        <Row gutter={[0, 0]} align={"middle"} justify={"center"}>
+          <Col span={24}>
+            <Form.Item<ContractorType> name={"name"} label="Name :" rules={[{ required: true, message: "Please fill this field" }]}>
+              <Input size="middle" style={{ width: "100%" }} placeholder="John"></Input>
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<ContractorType> name={"email"} label="Email :" rules={[{ required: true, message: "Please fill this field" }]}>
+              <Input size="middle" style={{ width: "100%" }} placeholder="johnDoe@domain.com"></Input>
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<ContractorType> name={"number"} label="Phonenumber :" rules={[{ required: true, message: "Please fill this field" }]}>
+              <Input size="middle" style={{ width: "100%" }} placeholder="0491088888"></Input>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Row justify={"end"} gutter={10}>
+              <Col>
+                <Button className="mt-1" htmlType="submit" loading={loading}>
+                  <PlusOutlined /> Submit
+                </Button>
+              </Col>
+              <Col>
+                <Button className="mt-1" type="default" onClick={onClose}>
+                  close
+                </Button>
+              </Col>
             </Row>
-          ) : (
-            <Empty />
-          )}
-        </Col>
-        <Col span={24}>
-          <Row justify={"space-between"}>
-            <Button className="mt-1" type="primary">
-              <PlusOutlined /> Add new
-            </Button>
-            <Button className="mt-1" type="default" onClick={onClose}>
-              close
-            </Button>
-          </Row>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   )
 }

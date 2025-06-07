@@ -11,6 +11,7 @@ import SupervisorCreatePage from "../pages/employee/supervisors/edit"
 import WorkplaceListPage from "../pages/workplace"
 import PalletCreatePage from "../pages/pallets/edit"
 import PalletWeightListPage from "../pages/pallets"
+import ContractorListPage from "../pages/contractors"
 
 interface RouterType {
   path: string
@@ -22,6 +23,11 @@ interface RouterType {
 const routes: RouterType[] = [
   {
     path: "/",
+    component: <Dashboard />,
+    authProtected: true,
+  },
+  {
+    path: "/dashboard",
     component: <Dashboard />,
     authProtected: true,
   },
@@ -88,6 +94,11 @@ const routes: RouterType[] = [
   {
     path: "/pallets/:id/edit",
     component: <PalletCreatePage />,
+    authProtected: true,
+  },
+  {
+    path: "/contractors",
+    component: <ContractorListPage />,
     authProtected: true,
   },
 ]

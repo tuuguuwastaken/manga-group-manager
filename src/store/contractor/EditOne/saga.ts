@@ -27,7 +27,9 @@ function* request(action: ReturnType<typeof contractorEditOneRequest>) {
       })
     }
 
-    action.payload.navigate(-1)
+    if (action.payload.navigate) {
+      action.payload.navigate(-1)
+    }
     yield put(contractorEditOneSuccess())
   } catch (error) {
     console.log(error)

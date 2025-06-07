@@ -17,7 +17,7 @@ function* request(action: ReturnType<typeof contractorGetListRequest>) {
       return
     }
     const res: CustomDocumentType<ContractorType>[] = yield call(firebaseBackend.getDataByPath, {
-      route: `${action.payload.config.path}/contractor`,
+      route: `${action.payload.config.path}/contractors`,
       type: "collection",
     })
 

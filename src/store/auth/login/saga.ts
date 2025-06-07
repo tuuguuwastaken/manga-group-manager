@@ -19,7 +19,7 @@ function* loginUserAsync(action: ReturnType<typeof loginUser>) {
     localStorage.setItem("current_org","asda")
 
     fireBaseBackend.setLoggedInUser(response)
-    action.payload.navigate("/")
+    action.payload.navigate("/dashboard")
 
     yield put(loginSuccess(response))
   } catch (error) {

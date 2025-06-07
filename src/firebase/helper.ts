@@ -236,6 +236,7 @@ class FirebaseAuthBackend {
     payload.data.updatedBy = null
 
     const res = await firebase.firestore().collection(path).add(payload.data)
+    console.log(payload.data.createdAt, firebase.firestore.Timestamp.now().toDate(), firebase.firestore.Timestamp.now())
     return res.id
   }
 

@@ -9,7 +9,7 @@ export type UnitType = 'weight' | 'volume';
 
 
 export interface PalletWeightType {
-    createAt?: Timestamp | null,
+    createdAt?: Timestamp | null,
     createdBy?: string | null,
     updatedAt?: Timestamp | null,
     updatedBy?: string | null,

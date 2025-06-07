@@ -1,12 +1,14 @@
 import { TableColumnsType, Button, Col, Card, Row, Table } from "antd"
 import { useEffect, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useCurrentGroup } from "../../hooks/group"
 import { CustomDocumentType } from "../../types/firebase"
 import { PalletWeightType } from "../../types/pallets"
 import { palletWeightGetListRequest, selectPalletWeightGetListState } from "../../store/pallets/getList/reducer"
 import dayjs from "dayjs"
+import { formatNumber } from "../../utils/format"
+import { contractorGetListRequest, selectContractorGetListState } from "../../store/contractor/GetList/reducer"
 
 const PalletWeightListPage = () => {
   const dispatch = useDispatch()
@@ -14,15 +16,18 @@ const PalletWeightListPage = () => {
 
   const { config } = useCurrentGroup()
   const { data, loading } = useSelector(selectPalletWeightGetListState)
+  const { data: contractors } = useSelector(selectContractorGetListState)
 
+  const onFetch = () => {
+    dispatch(palletWeightGetListRequest({ config }))
+    dispatch(contractorGetListRequest({ config }))
+  }
 
   useEffect(() => {
-    console.log("CONFIG AND DATA : ", config, data)
-    if (config && !data) {
-      console.log("sending res")
-      dispatch(palletWeightGetListRequest({ config:config }))
+    if (config) {
+      onFetch()
     }
-  }, [config])
+  }, [])
 
   const columns: TableColumnsType<CustomDocumentType<PalletWeightType>> = useMemo(
     () => [
@@ -35,38 +40,35 @@ const PalletWeightListPage = () => {
       {
         title: "Farm",
         align: "start",
-        width:150,
+        width: 150,
         render: (_value, record) => <>{record.data.farm}</>,
       },
       {
         title: "Block",
-        align: "start",
+        align: "center",
         width: 50,
         render: (_value, record) => <>{record.data.block}</>,
       },
       {
-        title: "Weight",
+        title: "Gross weight",
         align: "start",
-        width: 70,
-        render: (_value, record) => <>{record.data.weight}</>,
+        width: 120,
+        render: (_value, record) => <>{formatNumber(record.data.weight)} KG</>,
       },
       {
         title: "Trays",
-        align: "start",
-        width:70,
-        render: (_value, record) => <>{record.data.tray}</>,
+        width: 70,
+        render: (_value, record) => <>{formatNumber(record.data.tray)}</>,
       },
       {
         title: "Contractor",
         align: "start",
-        render: (_value, record) => <>{record.data.contractor}</>,
+        render: (_value, record) => <>{contractors?.find((e) => e.id == record.data.contractor)?.data.name}</>,
       },
       {
         title: "Created at",
-        width:150,
-        render:(_value, record) => <>
-          {dayjs(record.data.createAt?.toDate()).format("YYYY-MM-DD HH:MM:ss")}
-        </>
+        width: 150,
+        render: (_value, record) => <p>{dayjs(record.data.createdAt?.toDate()).format("DD-MM-YYYY | HH:MM:ss")}</p>,
       },
       {
         title: "Actions",

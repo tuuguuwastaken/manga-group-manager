@@ -4,7 +4,8 @@ import {
   AuditOutlined,
   TeamOutlined,
   FieldTimeOutlined,
-  BankOutlined
+  BankOutlined,
+  FormOutlined,
 } from "@ant-design/icons"
 import { MenuProps } from "antd"
 
@@ -33,7 +34,7 @@ function createMenuItem(
 }
 
 export const menuItems: MenuItem[] = [
-  createMenuItem("Dashboard", "/", <HomeOutlined />),
+  createMenuItem("Dashboard", "/dashboard", <HomeOutlined />),
   createMenuItem("Schedule", "/schedule", <FieldTimeOutlined />),
   createMenuItem("Employees", "employees", <BookOutlined />, [
     createMenuItem("Workers", "/workers", <TeamOutlined />),
@@ -42,5 +43,6 @@ export const menuItems: MenuItem[] = [
   createMenuItem("Workplace", "/workplace", <BankOutlined />, [
     createMenuItem("Companies", "/workplace/companies", <BookOutlined />)
   ]),
-  createMenuItem("Weight", "/pallets", <FieldTimeOutlined />)
+  createMenuItem("Weight", "/pallets", <FieldTimeOutlined />),
+  createMenuItem("Contractors" ,"/contractors", <FormOutlined />)
 ]

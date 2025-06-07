@@ -17,7 +17,7 @@ const initialState: ConctractorEditOneState = {
 
 export const selectContractorEditOneState = (state: RootState): ConctractorEditOneState => state.contractorEditOne
 
-export const contractorEditOneRequest = createAction<{config:ConfigState, id?: string, navigate: NavigateFunction, data: ContractorType }>("CONTRACTOR_EDIT_ONE_REQUEST")
+export const contractorEditOneRequest = createAction<{config:ConfigState, id?: string, navigate?: NavigateFunction, data: ContractorType }>("CONTRACTOR_EDIT_ONE_REQUEST")
 export const contractorEditOneSuccess = createAction("CONTRACTOR_EDIT_ONE_SUCCESS")
 export const contractorEditOneError = createAction<string>("CONTRACTOR_EDIT_ONE_ERROR")
 
