@@ -18,6 +18,31 @@ const PalletWeightListPage = () => {
   const { data, loading } = useSelector(selectPalletWeightGetListState)
   const { data: contractors } = useSelector(selectContractorGetListState)
 
+  const summaryRow = useMemo(() => {
+    if (!data || data.length === 0) return null
+
+    const totalWeight = data.reduce((sum, row) => sum + (row.data.weight || 0), 0)
+    const totalTrays = data.reduce((sum, row) => sum + (row.data.tray || 0), 0)
+
+    return (
+      <Table.Summary.Row>
+        <Table.Summary.Cell index={0} colSpan={3}>
+          <b>Total</b>
+        </Table.Summary.Cell>
+        <Table.Summary.Cell index={3}>
+          <b>{formatNumber(totalWeight)} KG</b>
+        </Table.Summary.Cell>
+        <Table.Summary.Cell index={4}>
+          <b>{formatNumber(totalTrays)}</b>
+        </Table.Summary.Cell>
+        {/* Empty cells for columns beyond tray */}
+        <Table.Summary.Cell index={5} />
+        <Table.Summary.Cell index={6} />
+        <Table.Summary.Cell index={7} />
+      </Table.Summary.Row>
+    )
+  }, [data])
+
   const onFetch = () => {
     dispatch(palletWeightGetListRequest({ config }))
     dispatch(contractorGetListRequest({ config }))
@@ -96,7 +121,7 @@ const PalletWeightListPage = () => {
       <Card>
         <Row gutter={[0, 10]} justify={"start"}>
           <Col span={24}>
-            <Table loading={loading} columns={columns} dataSource={data} size="small" />
+            <Table loading={loading} columns={columns} dataSource={data} size="small" summary={() => summaryRow} />
           </Col>
         </Row>
       </Card>
