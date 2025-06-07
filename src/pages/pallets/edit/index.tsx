@@ -187,7 +187,10 @@ const PalletCreatePage = () => {
           </Row>
         </div>
       </Card>
-      <ContractorSelectComponent show={contractorShow} onHide={() => setContractorShow(false)} onSelect={(e) => console.log(e)} />
+      <ContractorSelectComponent show={contractorShow} onHide={() => {
+        setContractorShow(false);
+        onFetch()
+      }}/>
     </>
   )
 }

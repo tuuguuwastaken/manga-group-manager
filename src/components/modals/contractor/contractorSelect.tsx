@@ -10,12 +10,6 @@ import { contractorEditOneRequest, selectContractorEditOneState } from "../../..
 export interface ContractorComponentProp {
   show: boolean
   onHide: () => void
-  onSelect: (val: ListType) => void
-}
-
-interface ListType {
-  value: string
-  label: string
 }
 
 const ContractorSelectComponent: React.FC<ContractorComponentProp> = ({ show, onHide }) => {
